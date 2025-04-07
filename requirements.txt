@@ -1,0 +1,7 @@
+crewai
+crewai_tools
+langchain
+python-dotenv
+langchain_groq
+langchain_community
+agentops

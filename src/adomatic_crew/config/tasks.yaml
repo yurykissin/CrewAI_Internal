@@ -1,0 +1,28 @@
+tech_architecture:
+  description: Design the backend architecture including agent orchestration, storage solutions, and inter-service communication.
+  expected_output: A system diagram and architecture plan covering agent interactions, storage (e.g., PostgreSQL/Azure/GCP), and FastAPI integration.
+  agent: tech_architect
+ui_flows_design:
+  description: Design intuitive user flows and wireframes for onboarding, ad creation, and analytics dashboard.
+  expected_output: Flow diagrams and wireframes for all main user interactions.
+  agent: ui_ux_designer
+frontend_implementation:
+  description: Implement React/Next.js frontend with Tailwind, covering login, onboarding, ad setup wizard, and campaign dashboard.
+  expected_output: Production-ready React components and pages for each designed screen.
+  agent: frontend_dev
+backend_api_setup:
+  description: Set up FastAPI backend with authentication, user management, campaign data handling, and LLM orchestration routes.
+  expected_output: Live FastAPI endpoints and initial database schema.
+  agent: backend_dev
+prompt_design:
+  description: Design and optimize GPT-4 prompts for onboarding advisor, ad generation assistant, and reporting summary agent.
+  expected_output: A set of modular, testable prompts with use-case notes for each customer-facing interaction.
+  agent: prompt_engineer
+project_milestones:
+  description: Break down goals into clear product milestones and deliverables
+  expected_output: A milestone plan with deliverables and estimated timelines
+  agent: product_manager
+qa_validation:
+  description: Review architecture, frontend flows, API behavior, and LLM prompts. Flag inconsistencies, suggest test coverage.
+  expected_output: QA checklist, test cases, and improvement suggestions.
+  agent: qa_agent

@@ -1,0 +1,5 @@
+agentops.log
+.env
+*.zip
+.DS_Store
+__pycache__
