@@ -1,28 +1,116 @@
-tech_architecture:
-  description: Design the backend architecture including agent orchestration, storage solutions, and inter-service communication.
-  expected_output: A system diagram and architecture plan covering agent interactions, storage (e.g., PostgreSQL/Azure/GCP), and FastAPI integration.
-  agent: tech_architect
-ui_flows_design:
-  description: Design intuitive user flows and wireframes for onboarding, ad creation, and analytics dashboard.
-  expected_output: Flow diagrams and wireframes for all main user interactions.
-  agent: ui_ux_designer
-frontend_implementation:
-  description: Implement React/Next.js frontend with Tailwind, covering login, onboarding, ad setup wizard, and campaign dashboard.
-  expected_output: Production-ready React components and pages for each designed screen.
-  agent: frontend_dev
-backend_api_setup:
-  description: Set up FastAPI backend with authentication, user management, campaign data handling, and LLM orchestration routes.
-  expected_output: Live FastAPI endpoints and initial database schema.
-  agent: backend_dev
-prompt_design:
-  description: Design and optimize GPT-4 prompts for onboarding advisor, ad generation assistant, and reporting summary agent.
-  expected_output: A set of modular, testable prompts with use-case notes for each customer-facing interaction.
-  agent: prompt_engineer
-project_milestones:
-  description: Break down goals into clear product milestones and deliverables
-  expected_output: A milestone plan with deliverables and estimated timelines
+###
+### Task configuration YAML
+###
+
+initiate_market_research:
+  agent: project_manager
+  description: >
+    Kick off the project by initiating market research to better understand the unmet needs of micro and small businesses in the advertising space.
+    Use the Market Research Analyst to delegate this work. Clearly state what research is needed and why it's critical before defining the MVP.
+  expected_output: >
+    A summary of what the Market Research Analyst was asked to do, and confirmation that the task was delegated.
+
+# Define MVP Strategy based on Deep Research which ran previusly in ChatGPT and stored in LangSmith  This task is for Product Manager
+# Input:  LangSmith dataset with Deep Research
+# Output: MVP Strategy
+define_mvp_strategy:
   agent: product_manager
-qa_validation:
-  description: Review architecture, frontend flows, API behavior, and LLM prompts. Flag inconsistencies, suggest test coverage.
-  expected_output: QA checklist, test cases, and improvement suggestions.
-  agent: qa_agent
+  description: >
+    Use the SMB market research insights to define an initial MVP strategy for the AI-native ad automation platform.
+    Identify the top 3 features to prioritize, based on unmet needs of micro and small businesses. 
+    Justify each feature based on evidence from the dataset. Include rough effort vs. impact estimate.
+  expected_output: >
+    1. MVP Scope
+    2. Key Features
+    3. Target User Segment
+    4. Roles Needed
+    5. Known Risks
+
+# Define Execution plan based on MVP plan created previsouly by the Product Manager
+# Input: MVP Strategy
+create_execution_plan:
+  agent: project_manager
+  description: >
+    Take the MVP plan created by the Product Manager Agent and turn it into a coordinated execution plan.
+    Start by checking if a technical architecture plan exists. If not, request it from the Technical Architect Agent.
+    Once received, use that architecture context to guide your task breakdown and agent assignments.
+    For market research tasks use 'Market Research Analyst'. Use only agents in the configuration.
+    Break the MVP into 2–4 epics. Under each epic, define features and break them down into tasks.
+
+    For each task, include:
+    - A short title
+    - A 1–2 sentence description of the task
+    - Assigned agent role
+    - Estimated duration
+    - Dependencies
+    - A clear, standalone execution prompt for the assigned agent
+
+    Inject technical architecture constraints into relevant task prompts (e.g., stack, API, data model).
+
+  expected_output: >
+    A structured plan of epics > features > tasks, each assigned to a specific agent.
+    For each task:
+    - Include agent role, description, estimated time, dependencies
+    - Include execution prompt text for the agent
+    Also include:
+    - Any open risks or blockers
+    - Recommended execution order
+
+define_architecture_plan:
+  agent: technical_architect
+  description: >
+    Based on the MVP plan provided by the Product Manager Agent, define the technical architecture for the platform.
+
+    Your plan should include:
+    - Core system architecture (frontend/backend/data/services)
+    - Stack recommendations for frontend and backend
+    - Key data models (e.g., User Profile, Campaign, Budget, Performance Metrics)
+    - API design notes or integration needs
+    - Security and performance considerations
+    - Any assumptions or open questions
+
+    This plan will be used by the UX, Backend, and Frontend engineers to guide all implementation work.
+
+  expected_output: >
+    A full technical architecture brief including:
+    1. Architecture Overview
+    2. Frontend Stack Recommendation
+    3. Backend Stack Recommendation
+    4. Key Data Models
+    5. Key APIs / Integration Points
+    6. Security & Performance Considerations
+    7. Assumptions / Open Questions
+
+design_user_interface:
+  agent: ux_designer
+  description: >
+    Based on the execution plan from the Project Manager Agent, design the user interface and interaction flow for one specific feature of the MVP.
+
+    The prompt will specify the feature, the user goal, and the architectural context (e.g., React frontend, FastAPI backend).
+
+    Your job is to define:
+    - The user interaction flow
+    - The layout of the screen (in words)
+    - UX design considerations
+    - Open questions or assumptions you made
+
+  expected_output: >
+    1. Task Summary
+    2. User Flow Description
+    3. Proposed UI Layout (using structured markdown or text-based wireframe)
+    4. UX Considerations
+    5. Assumptions / Questions (if any)
+
+market_research_analysis:
+  agent: market_researcher
+  description: >
+    Conduct or analyze market research about SMB needs and pain points related to ad automation platforms.
+    If no research is provided, generate a high-level analysis using your knowledge.
+    If research is available, extract and summarize key insights.
+  expected_output: >
+    1. Key Market Trends and Pain Points
+    2. Most Commonly Requested Features
+    3. Unmet Needs & Gaps in the Market
+    4. Summary for Product Planning
+    End your response with:
+    "MVP research is ready for Product Manager Agent."

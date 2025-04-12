@@ -3,3 +3,61 @@ agentops.log
 *.zip
 .DS_Store
 __pycache__
+reports/*
+archive/*
+cache/agent_outputs/*
+*.logs
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Logs & debug output
+*.log
+logs/
+**/logs/
+*.rtf  # Optional: those rogue .rtf files, unless you really love them
+
+# Temp files
+temp/
+**/cache/
+**/archive/
+*.zip
+
+# IDE/editor config
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Bytecode
+__pycache__/
+*.pyc
+
+# Logs and runtime junk
+*.log
+logs/
+src/adomatic_crew/cache/
+src/adomatic_crew/archive/cache/
+src/adomatic_crew/archive/logs/
+src/adomatic_crew/archive/reports/
+src/adomatic_crew/archive/temp.json
+
+# Zips and temp artifacts
+*.zip
+Archive.zip
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Optional: exclude .rtf reports if you hate formatting
+*.rtf
