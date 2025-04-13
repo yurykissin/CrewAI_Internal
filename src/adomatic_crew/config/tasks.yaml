@@ -84,9 +84,12 @@ define_architecture_plan:
 design_user_interface:
   agent: ux_designer
   description: >
-    Based on the execution plan from the Project Manager Agent, design the user interface and interaction flow for one specific feature of the MVP.
+    Based on the execution plan from the Project Manager Agent and the techincal architecture from the Technical Architect design the user interface and interaction flow for one specific feature of the MVP.
 
-    The prompt will specify the feature, the user goal, and the architectural context (e.g., React frontend, FastAPI backend).
+    The prompt will specify:
+    - The feature and user goal
+    - The frontend stack (from Technical Architect Agent)
+    - Interaction expectations
 
     Your job is to define:
     - The user interaction flow
@@ -114,3 +117,51 @@ market_research_analysis:
     4. Summary for Product Planning
     End your response with:
     "MVP research is ready for Product Manager Agent."
+
+spec_user_profile_ui:
+  agent: frontend_dev
+  description: >
+    Describe the React UI implementation plan for the user profile screen.
+    Use the UX layout provided and follow the frontend stack from the Technical Architect Agent.
+    Include key components, state management, styling plan, and API integration points.
+  expected_output: >
+    - Component breakdown and naming
+    - State and data handling strategy
+    - API methods to be called
+    - Use of styling libraries or patterns (e.g., Tailwind)
+    - Assumptions or questions
+
+code_user_profile_ui:
+  agent: frontend_dev
+  description: >
+    Generate the React code for the user profile screen based on the previously defined implementation spec.
+    Follow the UX design and the stack defined in the architecture (e.g., React + Tailwind).
+  expected_output: >
+    - Full React component code (JSX)
+    - Any necessary imports (e.g., useState, axios/fetch)
+    - Integration with API (GET/POST for user data)
+    - Tailwind-based layout if applicable
+
+spec_user_profile_api:
+  agent: backend_dev
+  description: >
+    Define the backend API implementation plan for handling user profile creation and updates.
+    Follow the backend stack and data model guidance provided by the Technical Architect Agent.
+  expected_output: >
+    - API route paths and HTTP methods
+    - Request/response data schema
+    - Input validation logic and error handling
+    - Auth or service dependencies
+    - Any assumptions or open questions
+
+  
+code_user_profile_api:
+  agent: backend_dev
+  description: >
+    Generate the backend code for the user profile API as defined in the implementation spec.
+    Follow the architectural guidance (e.g., FastAPI, Express) and implement proper request/response handling.
+  expected_output: >
+    - Full code for route definition and handler(s)
+    - Validation logic and error responses
+    - Example input/output payloads
+    - DB or service integration stub

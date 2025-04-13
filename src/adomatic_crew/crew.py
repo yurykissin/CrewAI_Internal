@@ -5,7 +5,14 @@ from src.adomatic_crew.config.llms import groq_llm, fireworks_llm
 from src.adomatic_crew.tools.langsmith_loader import load_full_langsmith_research
 from utils.cache_utils import get_cached_agent_output, save_agent_output
 import time
-import os
+from pathlib import Path
+
+# Shared timestamp for all tasks in this crew run
+FULL_REPORT_TIMESTAMP = time.strftime("%Y-%m-%d_%H-%M-%S")
+FULL_REPORT_PATH = f"/code/reports/full_output_latest_{FULL_REPORT_TIMESTAMP}.md"
+
+# Ensure report file is clean on new run
+Path(FULL_REPORT_PATH).write_text("")  # clear file
 
 @CrewBase
 class AdomaticAgents():
@@ -39,19 +46,14 @@ class AdomaticAgents():
 		print(f"[✅ CALLBACK] Output saved for task: {task_result.name}")
 
 		try:
-			os.makedirs("/code/reports", exist_ok=True)
-			timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
-
-			# ✅ Append to cumulative full report
-			full_md_path = f"/code/reports/full_output_latest_{timestamp}.md"
-			with open(full_md_path, "a") as full_report:
+			with open(FULL_REPORT_PATH, "a") as full_report:
 				full_report.write(f"\n\n---\n\n# Task: {task_result.name}\n\n")
 				full_report.write(f"**Agent**: {agent_role}\n\n")
 				full_report.write(f"**Description**:\n{task_result.description}\n\n")
 				full_report.write(f"**Expected Output**:\n{task_result.expected_output}\n\n")
 				full_report.write(f"**Result**:\n\n{output_text}\n")
 			
-			print(f"[✅ CALLBACK] Markdown report saved to {full_md_path}")
+			print(f"[✅ CALLBACK] Markdown report saved to {FULL_REPORT_PATH}")
 
 
 		except Exception as e:
@@ -98,6 +100,24 @@ class AdomaticAgents():
 	@agent
 	def market_researcher(self) -> Agent:
 		config=self.agents_config['market_researcher']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=fireworks_llm.model
+		)
+	
+	@agent
+	def frontend_dev(self) -> Agent:
+		config=self.agents_config['frontend_dev']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=fireworks_llm.model
+		)
+	
+	@agent
+	def backend_dev(self) -> Agent:
+		config=self.agents_config['backend_dev']
 		return Agent(
 			config=config,
 			name=config["role"],
@@ -165,6 +185,42 @@ class AdomaticAgents():
 			verbose=True
 		)
 		return task
+	
+	@task
+	def spec_user_profile_ui(self) -> Task:
+		task = Task(
+			config=self.tasks_config['spec_user_profile_ui'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def code_user_profile_ui(self) -> Task:
+		task = Task(
+		config=self.tasks_config['code_user_profile_ui'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def spec_user_profile_api(self) -> Task:
+		task = Task(
+			config=self.tasks_config['spec_user_profile_api'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def code_user_profile_api(self) -> Task:
+		task = Task(
+		config=self.tasks_config['code_user_profile_api'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
 
 	@crew
 	def crew(self) -> Crew:
@@ -177,6 +233,8 @@ class AdomaticAgents():
 			"Product Manager Agent": self.product_manager(),
 			"Technical Architect Agent": self.technical_architect(),
 			"UX Designer": self.ux_designer(),
+			"Frontend Dev Agent": self.frontend_dev(),
+			"Backend Dev Agent": self.backend_dev(),
 		}
 
 		crew_instance = Crew(
@@ -188,19 +246,23 @@ class AdomaticAgents():
 				self.create_execution_plan(),
 				self.define_architecture_plan(),
 				self.design_user_interface(),
+				self.spec_user_profile_ui(),
+				self.code_user_profile_ui(),
+				self.spec_user_profile_api(),
+				self.code_user_profile_api(),
 			],
 			manager_agent=self.project_manager(),  # Lead agent
-			process=Process.hierarchical,
+			process=Process.sequential,
 			verbose=True,
 			task_callback=self.task_callback
 		)
-		print("[DEBUG] Agents in crew:")
-		for a in crew_instance.agents:
-			print(f" - {type(a)}")
-			print(f" - full object: {a}")
+		# print("[DEBUG] Agents in crew:")
+		# for a in crew_instance.agents:
+		# 	print(f" - {type(a)}")
+		# 	print(f" - full object: {a}")
 
-		print("[DEBUG] Registered coworkers:")
-		for agent in crew_instance.agents:
-			print(f" - {agent.agent_ops_agent_name}")
+		# print("[DEBUG] Registered coworkers:")
+		# for agent in crew_instance.agents:
+		# 	print(f" - {agent.agent_ops_agent_name}")
 
 		return crew_instance

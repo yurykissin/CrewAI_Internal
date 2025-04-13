@@ -7,10 +7,15 @@ from datetime import datetime
 import time
 import agentops
 import litellm
+import re
 
 # Init liteLLM
 #litellm.set_verbose = True
 #litellm._turn_on_debug()
+
+def remove_ansi_sequences(text):
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    return ansi_escape.sub('', text)
 
 # Init agentops for 
 agentops.init(os.getenv("AGENTOPS_API_KEY"))
@@ -47,4 +52,18 @@ else:
 sys.stdout.close()
 sys.stdout = sys.__stdout__
 sys.stderr = sys.__stderr__
+
+# Auto-generate output file name
+base_name, _ = os.path.splitext(log_path)
+output_file = f"{base_name}.clean.txt"
+
+# Read and clean
+with open(log_path, 'r', encoding='utf-8') as f:
+    raw_content = f.read()
+
+clean_content = remove_ansi_sequences(raw_content)
+
+with open(output_file, 'w', encoding='utf-8') as f:
+    f.write(clean_content)
+
 print(f"✅ Full session log saved to {log_path}")
