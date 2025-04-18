@@ -13,3 +13,15 @@ fireworks_llm = LLM(
     #model="fireworks/llama-v3p1-8b-instruct",
     litellm_provider="fireworks"
 )
+
+# Together.ai LLaMA 
+togetherai_llm = LLM(
+    model="meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+    litellm_provider="together_ai"
+)
+
+# HuggingFace Phind/Phind-CodeLlama-34B-v2
+hf_llm = LLM(
+    model="huggingface/codellama/CodeLlama-13b-Instruct-hf",
+    litellm_provider="huggingface"
+)

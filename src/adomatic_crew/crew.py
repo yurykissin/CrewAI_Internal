@@ -1,7 +1,7 @@
 from crewai import Crew, Process, Agent, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai.tasks.task_output import TaskOutput
-from src.adomatic_crew.config.llms import groq_llm, fireworks_llm
+from src.adomatic_crew.config.llms import groq_llm, fireworks_llm, togetherai_llm, hf_llm
 from src.adomatic_crew.tools.langsmith_loader import load_full_langsmith_research
 from utils.cache_utils import get_cached_agent_output, save_agent_output
 import time
@@ -13,6 +13,8 @@ FULL_REPORT_PATH = f"/code/reports/full_output_latest_{FULL_REPORT_TIMESTAMP}.md
 
 # Ensure report file is clean on new run
 Path(FULL_REPORT_PATH).write_text("")  # clear file
+
+llm=togetherai_llm
 
 @CrewBase
 class AdomaticAgents():
@@ -66,7 +68,7 @@ class AdomaticAgents():
 		return Agent(
 			config=config,
 			name=config["role"],
-			llm=fireworks_llm.model
+			llm=hf_llm
 		)
 	
 	# Defining the Product manager agent. This is the main agent who receives as input link to langsmith dataset. The output of this agent is MVP strategy
@@ -76,7 +78,7 @@ class AdomaticAgents():
 		return Agent(
 			config=config,
 			name=config["role"],
-			llm=fireworks_llm.model
+			llm=llm
 		)
 
 	@agent
@@ -85,7 +87,7 @@ class AdomaticAgents():
 		return Agent(
 			config=config,
 			name=config["role"],
-			llm=fireworks_llm.model
+			llm=llm
 		)
       
 	@agent
@@ -94,7 +96,7 @@ class AdomaticAgents():
 		return Agent(
 			config=config,
 			name=config["role"],
-			llm=fireworks_llm.model
+			llm=llm
 		)
 	
 	@agent
@@ -103,7 +105,7 @@ class AdomaticAgents():
 		return Agent(
 			config=config,
 			name=config["role"],
-			llm=fireworks_llm.model
+			llm=llm
 		)
 	
 	@agent
@@ -112,7 +114,7 @@ class AdomaticAgents():
 		return Agent(
 			config=config,
 			name=config["role"],
-			llm=fireworks_llm.model
+			llm=llm
 		)
 	
 	@agent
@@ -121,7 +123,69 @@ class AdomaticAgents():
 		return Agent(
 			config=config,
 			name=config["role"],
-			llm=fireworks_llm.model
+			llm=llm
+		)
+	
+	@agent
+	def cloud_architect(self) -> Agent:
+		config=self.agents_config['cloud_architect']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=llm
+		)
+
+	@agent
+	def devops_engineer(self) -> Agent:
+		config=self.agents_config['devops_engineer']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=llm
+		)
+	
+	@agent
+	def data_analyst(self) -> Agent:
+		config=self.agents_config['data_analyst']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=llm
+		)
+	
+	@agent
+	def dba(self) -> Agent:
+		config=self.agents_config['dba']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=llm
+		)
+	
+	@agent
+	def integration_engineer(self) -> Agent:
+		config=self.agents_config['integration_engineer']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=llm
+		)
+	
+	@agent
+	def url_publisher(self) -> Agent:
+		config=self.agents_config['url_publisher']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=llm
+		)
+	@agent
+	def qa(self) -> Agent:
+		config=self.agents_config['qa']
+		return Agent(
+			config=config,
+			name=config["role"],
+			llm=llm
 		)
 	
 	@task
@@ -222,6 +286,78 @@ class AdomaticAgents():
 		)
 		return task
 
+	@task
+	def define_cloud_infrastructure(self) -> Task:
+		task = Task(
+		config=self.tasks_config['define_cloud_infrastructure'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def implement_local_devops_stack(self) -> Task:
+		task = Task(
+		config=self.tasks_config['implement_local_devops_stack'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def define_data_strategy_and_metrics(self) -> Task:
+		task = Task(
+		config=self.tasks_config['define_data_strategy_and_metrics'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def define_database_schema(self) -> Task:
+		task = Task(
+		config=self.tasks_config['define_database_schema'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def integrate_services_stack(self) -> Task:
+		task = Task(
+		config=self.tasks_config['integrate_services_stack'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+	
+	@task
+	def publish_deployment_urls(self) -> Task:
+		task = Task(
+		config=self.tasks_config['publish_deployment_urls'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+
+	@task
+	def integration_user_profile_stack(self) -> Task:
+		task = Task(
+			config=self.tasks_config['integration_user_profile_stack'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+
+	@task
+	def validate_system_functionality(self) -> Task:
+		task = Task(
+			config=self.tasks_config['validate_system_functionality'],
+			callback=self.task_callback,
+			verbose=True
+		)
+		return task
+
 	@crew
 	def crew(self) -> Crew:
 		print("Creating crew with hierarchical orchestration...")
@@ -235,22 +371,58 @@ class AdomaticAgents():
 			"UX Designer": self.ux_designer(),
 			"Frontend Dev Agent": self.frontend_dev(),
 			"Backend Dev Agent": self.backend_dev(),
+			"Cloud Infrastructure Architect": self.cloud_architect(),
+			"DevOps Engineer": self.devops_engineer(),
+			"Data Analyst Agent": self.data_analyst(),
+			"Database Administrator Agent": self.dba(),
+			"Integration Engineer Agent": self.integration_engineer(),
+			"URL Publisher Agent": self.url_publisher(),
+			"QA Agent": self.qa(),
 		}
 
 		crew_instance = Crew(
 			agents=list(agent_dict.values()),
-			tasks=[
+			tasks = [
+				# 🧠 Discovery & Planning
 				self.initiate_market_research(),
 				self.market_research_analysis(),
 				self.define_mvp_strategy(),
-				self.create_execution_plan(),
+
+				# 🏗️ Architecture
 				self.define_architecture_plan(),
+
+				# 🎨 Planning & Design
+				self.create_execution_plan(),
 				self.design_user_interface(),
+
+				# 💻 Frontend - Specification + Code
 				self.spec_user_profile_ui(),
 				self.code_user_profile_ui(),
+
+				# 🛠 Backend - Specification + Code
 				self.spec_user_profile_api(),
 				self.code_user_profile_api(),
-			],
+
+				# ☁️ Infrastructure
+				self.define_cloud_infrastructure(),
+
+				# ⚙️ DevOps
+				self.implement_local_devops_stack(),
+
+				# 🔌 Integration (UI + API + DB)
+				self.integration_user_profile_stack(),
+				self.integrate_services_stack(),
+
+				# 📤 Exposure
+				self.publish_deployment_urls(),
+
+				# 📊 Analytics & DB
+				self.define_data_strategy_and_metrics(),
+				self.define_database_schema(),
+
+				# 🧪 QA
+				self.validate_system_functionality(),
+				],
 			manager_agent=self.project_manager(),  # Lead agent
 			process=Process.sequential,
 			verbose=True,

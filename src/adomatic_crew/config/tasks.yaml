@@ -154,7 +154,6 @@ spec_user_profile_api:
     - Auth or service dependencies
     - Any assumptions or open questions
 
-  
 code_user_profile_api:
   agent: backend_dev
   description: >
@@ -165,3 +164,100 @@ code_user_profile_api:
     - Validation logic and error responses
     - Example input/output payloads
     - DB or service integration stub
+
+define_cloud_infrastructure:
+  agent: cloud_architect
+  description: >
+    Translate the technical architecture into a deployable infrastructure layout for the MVP.
+    Define how and where each service will run, what infrastructure components are needed, and how they connect.
+  expected_output: >
+    - Infrastructure diagram or layout description
+    - Compute and hosting model for each service (e.g., static site, API, DB)
+    - Networking design (e.g., subnets, ingress, DNS, SSL)
+    - Key environment/grouping recommendations (e.g., frontend vs backend)
+    - Assumptions or decisions regarding cloud vs local deployment
+    - Security/access design (firewalls, isolation, authentication)
+
+implement_local_devops_stack:
+  agent: devops_engineer
+  description: >
+    Implement a local devops setup based on the infrastructure layout and architecture.
+    The stack should deploy all services into a local Kubernetes environment using standard tools.
+  expected_output: >
+    - Chosen toolchain (e.g., Helm, Kustomize, Skaffold, Docker Compose)
+    - Description of CI/CD automation (e.g., GitHub Actions, local build scripts)
+    - Secrets/config management approach
+    - Folder structure recommendations for infra-as-code
+    - Sample YAML or Helm snippet if appropriate
+    - Any known limitations or dev-time caveats
+
+define_data_strategy_and_metrics:
+  agent: data_analyst
+  description: >
+    Define how product and user activity data should be captured, stored, and used for analysis.
+    Propose a model that enables tracking of business KPIs, feature usage, and marketing performance.
+  expected_output: >
+    - Key metrics (e.g., user activation rate, campaign ROI, click-through rate)
+    - Recommended event structure or schema for tracking
+    - Dimensions and tables needed (e.g., user, session, campaign, ad creative)
+    - Data freshness or processing model (real-time, batch, daily aggregation)
+    - Assumptions about data sources (frontend events, backend logs, 3rd-party APIs)
+    - Analytics layers (dashboards, data marts) if applicable
+
+define_database_schema:
+  agent: dba
+  description: >
+    Based on the MVP features and the data strategy, design a relational (or hybrid) database schema to support core product needs and analytical queries.
+  expected_output: >
+    - Entity definitions and relationships (e.g., user, campaign, ad, performance metric)
+    - Indexing strategy (e.g., for filter/search/sort queries)
+    - Constraints, foreign keys, data types, and normalization approach
+    - Suggestions for high-volume or time-series handling (e.g., partitioning, TTL)
+    - Integration notes (e.g., access via API, ORM schema support)
+
+integrate_services_stack:
+  agent: integration_engineer
+  description: >
+    Connect the frontend, backend, and database using the existing infrastructure and devops stack.
+    Resolve any integration issues and prepare the system for exposure.
+  expected_output: >
+    - Connectivity map (how frontend calls backend, how backend connects to DB)
+    - Working environment with valid data flow
+    - Any errors found and how they were resolved
+    - Recommendations for verification (e.g., test queries, curl)
+
+publish_deployment_urls:
+  agent: url_publisher
+  description: >
+    Expose the locally running services via public URLs and confirm they are reachable.
+  expected_output: >
+    - Tool used for exposure (e.g., ngrok)
+    - Final URLs for each service (UI, API, Admin if applicable)
+    - Confirmation of reachability (ping/curl or status code)
+    - Security/auth notes (if any)
+
+integration_user_profile_stack:
+  agent: integration_engineer
+  description: >
+    Integrate the user profile UI, backend API, and database schema into a functional end-to-end experience.
+    Validate that data flows correctly from the frontend to backend and is stored in the database.
+    Identify and resolve any mismatches, runtime errors, or missing glue logic across components.
+  expected_output: >
+    - End-to-end test scenario executed (e.g., user profile form submission, DB write)
+    - Summary of integration points and how they were wired
+    - Issues encountered (e.g., CORS, schema mismatch, missing fields)
+    - Fixes or configuration added
+    - Confirmation of successful flow (e.g., user creation verified in DB)
+    - Assumptions or edge cases for future improvement
+
+validate_system_functionality:
+  agent: qa
+  description: >
+    Perform QA validation on the deployed and integrated MVP system.
+    Run smoke tests, verify user flows, confirm service availability, and identify any issues across components.
+  expected_output: >
+    - Test coverage summary
+    - Validation steps performed (manual + automated)
+    - Issues encountered (functional, visual, integration)
+    - Suggested fixes (assignable to agents)
+    - Confirmation of working MVP (or fail reason)
